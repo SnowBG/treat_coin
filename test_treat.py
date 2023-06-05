@@ -1,3 +1,8 @@
+from dotenv import load_dotenv
+import os
+from time import sleep
+from abc import ABC
+
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -5,16 +10,26 @@ from selenium.webdriver.common.alert import Alert
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from dotenv import load_dotenv
-import os
-import pdb
-from time import sleep
 
 load_dotenv()
-
 u = os.environ['TREAT_U']
 p = os.environ['TREAT_P']
+
 url = f"https://{u}:{p}@treatcoin.com"
+
+
+class PageElement(ABC):
+    """
+    Abstract class to get the webdriver.
+    """
+    def __init__(self, webdriver,url='https://treatcoin.com'):
+        self.webdriver = webdriver
+        self.url = url
+
+    def open(self):
+        self.webdriver.get(self.url)
+
+
 
 
 def get_driver(url):
