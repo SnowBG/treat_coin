@@ -27,10 +27,10 @@ class PageElement(ABC):
         self.url = url
 
     def find_element(self, locator):
-        self.webdriver.find_element(*locator)
+        return self.webdriver.find_element(*locator)
     
     def find_elements(self, locator):
-        self.webdriver.find_elements(*locator)
+        return self.webdriver.find_elements(*locator)
 
     def open(self):
         self.webdriver.get(self.url)
@@ -46,22 +46,24 @@ class Login(PageElement):
     """
 
 
-def get_driver(url):
-    browser = Firefox()
-    browser.get(url)
-    wd = WebDriverWait(browser, 10)
-    wd.until(EC.title_contains('TreatCoin'),'Seu tempo acabou!')
-    return browser
-
-def do_search(driver, tag_name, question):
-    search = driver.find_element(By.NAME, tag_name)
-    search.send_keys(question)
-    search.send_keys(Keys.ENTER)
-    return driver
     
-driver = get_driver(url)
-sleep(5)
 
-assert driver.find_element(By.CSS_SELECTOR,'.intro-content > span:nth-child(3) > button:nth-child(1)').text == 'Join TreatCoin'
+# assert driver.find_element(By.CSS_SELECTOR,'.intro-content > span:nth-child(3) > button:nth-child(1)').text == 'Join TreatCoin'
+
+# def get_driver(url):
+#     browser = Firefox()
+#     browser.get(url)
+#     wd = WebDriverWait(browser, 10)
+#     wd.until(EC.title_contains('TreatCoin'),'Seu tempo acabou!')
+#     return browser
+
+# def do_search(driver, tag_name, question):
+#     search = driver.find_element(By.NAME, tag_name)
+#     search.send_keys(question)
+#     search.send_keys(Keys.ENTER)
+#     return driver
+
+
+
 
 driver.close()
