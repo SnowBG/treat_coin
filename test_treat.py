@@ -26,10 +26,24 @@ class PageElement(ABC):
         self.webdriver = webdriver
         self.url = url
 
+    def find_element(self, locator):
+        self.webdriver.find_element(*locator)
+    
+    def find_elements(self, locator):
+        self.webdriver.find_elements(*locator)
+
     def open(self):
         self.webdriver.get(self.url)
 
-
+class Login(PageElement):
+    """
+    See More = CLASS, "see-more-link"
+    Sidebar menu button = ID, "menu-bar"
+    Log in = CLASS, "login-logout-button"
+    Username = ID, "username"
+    Password = ID, "password"
+    Log in button = CLASS, "login-button"
+    """
 
 
 def get_driver(url):
