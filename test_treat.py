@@ -1,7 +1,19 @@
 """
-This scprit was made to automate test of TreatCoin webapp.
+Company: Market Blitz
+Author: Emerson Lara
+Last Update: 2023-06-06
 
+Description: This scprit was made to automate test of TreatCoin WebApp.
 
+Libriaries/Dependencies:
+- dotenv: to load the environment variables
+- os: to recover the environment variables from Operation System
+- time: to have a delay of the scripts' execution
+- abc: to turn classes into abstract classes
+- selenium: to control the browser on the automation
+
+Credentials:
+- .env: this file must be on the same folder that this script's file and must contain the environment variables.
 """
 
 
@@ -18,18 +30,27 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
+"""
+Loading and using the environment variabels.
+This was necessary to do network login before the DOM is loaded.
+"""
+
 load_dotenv()
 u = os.environ['TREAT_U']
 p = os.environ['TREAT_P']
 
+# Composing the URL with network user and password
 url = f"https://{u}:{p}@treatcoin.com"
 
 
 class SeleniumObject:
+    """ Do the abstraction of the Selenium Objects. """
     def find_element(self, locator):
+        """ Find a especific element on the DOM, according to the search conditions."""
         return self.webdriver.find_element(*locator)
 
     def find_elements(self, locator):
+        """ Find a list of elements on the DOM, according to the search conditions."""
         return self.webdriver.find_elements(*locator)
 
 class Page(ABC, SeleniumObject):
@@ -37,11 +58,13 @@ class Page(ABC, SeleniumObject):
     Abstract class to get the webdriver.
     """
     def __init__(self, webdriver,url=url):
+        """ Constructor. """
         self.webdriver = webdriver
         self.url = url
         self._reflection()
 
     def open(self):
+        """ Load and get the URL DOM as an object."""
         self.webdriver.get(url)
 
     def _reflection(self):
@@ -56,9 +79,11 @@ class PageElement(Page, ABC, SeleniumObject):
 
 class ReachLogin(PageElement):
     """
-    See More = CLASS_NAME, "see-more-link"
-    Sidebar menu button = ID, "menu-bar"
-    Log in = CLASS_NAME, "login-logout-button"
+    Steps to reach the Login page from start.
+    Vars/DOM search:
+        See More = CLASS_NAME, "see-more-link"
+        Sidebar menu button = ID, "menu-bar"
+        Log in = CLASS_NAME, "login-logout-button"
     """
     selenium_object = SeleniumObject()
     see_more = (By.CLASS_NAME, "see-more-link")
@@ -75,9 +100,11 @@ class ReachLogin(PageElement):
 
 class DoLogin(PageElement):
     """
-    Username = ID, "username"
-    Password = ID, "password"
-    Log in button = CLASS_NAME, "login-button"
+    Steps to do Login.
+    Vars/DOM search:
+        Username = ID, "username"
+        Password = ID, "password"
+        Log in button = CLASS_NAME, "login-button"
     """
     user = (By.ID, "username")
     pwd = (By.ID, "password")
@@ -92,18 +119,23 @@ class DoLogin(PageElement):
     def click_login(self):
         self.find_element(self.login_btn).click()
 
-webdriver = Chrome()
-login_elem = ReachLogin(webdriver)
+
+# Calling the methods
+
+webdriver = Chrome()                # Calling the browser
+login_elem = ReachLogin(webdriver)  # Instance of ReachLogin class passin the browser webdriver
+# Open browser, call URL an reach login page
 login_elem.open()
 sleep(5)
 login_elem.click_see_more()
 sleep(3)
 login_elem.click_login_link()
 sleep(3)
-login = DoLogin(webdriver)
+# Fulfil user and password fields and click on Login button.
+login = DoLogin(webdriver)          # Instance of DoLogin class passin the browser webdriver
 login.fulfil_user()
 login.fulfil_password()
 sleep(3)
 login.click_login()
 sleep(15)
-# webdriver.close()
+webdriver.close()
